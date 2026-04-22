@@ -1,4 +1,4 @@
-import { and, desc, eq, getTableColumns, ilike, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, getTableColumns, ilike, or } from "drizzle-orm";
 import express from "express";
 import { departments, subjects } from "../db/schema";
 import { db } from "../db";
@@ -10,8 +10,13 @@ router.get("/", async (req, res) => {
   try {
     const { search, department, page = 1, limit = 10 } = req.query;
 
-    const currentPage = Math.max(1, +page);
-    const limitPerPage = Math.max(1, +limit);
+    // const currentPage = Math.max(1, +page);
+    // const limitPerPage = Math.max(1, +limit);
+    const currentPage = Math.max(1, parseInt(String(page), 10) || 1);
+    const limitPerPage = Math.min(
+      Math.max(1, parseInt(String(limit), 10), 10),
+      100,
+    );
 
     const offset = (currentPage - 1) * limitPerPage;
 
@@ -38,7 +43,7 @@ router.get("/", async (req, res) => {
 
     // Get total count of subjects matching the filter conditions for pagination
     const countResult = await db
-      .select({ count: sql<number>`count(*)` })
+      .select({ count: count() })
       .from(subjects)
       .leftJoin(departments, eq(subjects.departmentId, departments.id))
       .where(whereClause);

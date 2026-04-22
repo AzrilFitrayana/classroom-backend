@@ -4,16 +4,23 @@ import subjectsRouter from "./routes/subjects";
 
 const app = express();
 const PORT = 8000;
+const frontendUrl = process.env.FRONTEND_URL;
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-}))
+if (!frontendUrl) {
+  throw new Error("FRONTEND_URL environment variable is not defined");
+}
+
+app.use(
+  cors({
+    origin: frontendUrl,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
-app.use('/api/subjects', subjectsRouter);
+app.use("/api/subjects", subjectsRouter);
 
 app.get("/", (_req, res) => {
   res.json({ message: "Classroom backend is running." });
