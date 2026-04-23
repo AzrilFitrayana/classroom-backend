@@ -15,6 +15,13 @@
       "when": 1776686667682,
       "tag": "0001_chubby_lady_bullseye",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776963463552,
+      "tag": "0002_lowly_tinkerer",
+      "breakpoints": true
     }
   ]
 }
